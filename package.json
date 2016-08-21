@@ -1,0 +1,27 @@
+{
+    "name": "felis-stack-compiler",
+    "version": "1.0.0",
+    "description": "A compiler and stack for front-end web development",
+    "dependencies": {
+        "chokidar": "^1.6.0",
+        "autoprefixer": "^6.4.0",
+        "postcss": "^5.1.2",
+        "cssshrink": "^0.0.5",
+        "node-sass": "^3.8.0",
+        "babel-core": "^6.13.2",
+        "walk": "^2.3.9"
+    },
+    "main": "main.js",
+    "scripts": {},
+    "keywords": [
+        "Frontend",
+        "Stack",
+        "Compiler",
+        "Sass",
+        "CSS",
+        "Babel",
+        "minifier"
+    ],
+    "author": "Felis Phasma <felisphasma@gmail.com> (felisphasma.github.io)",
+    "license": "ISC"
+}
