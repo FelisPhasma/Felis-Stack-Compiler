@@ -39,22 +39,17 @@ let SassFiles = [],
 function sassUpdate(file) {
     // compile sass
     let sass = fs.readFileSync(file, 'utf8');
-    ////console.log(sass);
     let css = nodeSass.renderSync({
         data: sass
     });
-    ////console.log("0x01");
     // auto-prefix
     postcss([autoprefixer]).process(css.css.toString()).then((result) => {
-        ////console.log("1x00");
         result.warnings().forEach((warn) => {
             console.warn(warn.toString());
         });
-        ////console.log("1x01");
         // minify
         let parsed = crass.parse(result.css),
             compressedCss = parsed.toString();
-        ////console.log("1x02");
         // write
         fs.writeFile(__dirname + "\\" + CssOutDir + "\\" + path.basename(file).split(".")[0] + ".css", compressedCss, (err) => {
             if (err)
@@ -62,7 +57,6 @@ function sassUpdate(file) {
             console.log("    Updated ", (SassDir[SassDir.length - 1] == "\\" ? SassDir : SassDir + "\\") + path.basename(file), ">", (CssOutDir[CssOutDir.length - 1] == "\\" ? CssOutDir : CssOutDir + "\\") + path.basename(file).split(".")[0] + ".css");
         });
     });
-    ////console.log("2x00");
 }
 
 function initSASS(callback){
