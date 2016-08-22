@@ -6,6 +6,7 @@ felisStack  SassDir CssOutDir
             HtmlDir
 */
 // TODO: multiple dirs as arg
+// TODO: asm.js would be nice
 const compileOnRun = true;
 let argvI = 2, // Args start at 2
     SassDir = process.argv[argvI++].replace("/", "\\"),
