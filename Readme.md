@@ -20,7 +20,7 @@ You probably want to stick that last line in a batch or bash file that you can e
 ----
 ## What's compiled
 
-All `.scss` files in the `ScssDir` are compiled into the `CssDir`.
+All `.scss` files in the `ScssDir` are compiled into the `CssDir`. Node sass does not support sass files yet.
 All the `.js` files in the `BabelDir` are compiled into the `JsDir`. 
 All files within the `HtmlDir` with a file extension of `.max.html` or `.max.htm` are compiled within their respective sub directory of the `HtmlDir`
 
@@ -33,6 +33,6 @@ All files within the `HtmlDir` with a file extension of `.max.html` or `.max.htm
 `postcss` and `autoprefixer` are used to auto-prefix the CSS.
 `crass` is used to minify the css.
 
-`babel-core` is used to compile ec6 and minify .
+`babel-core` is used to compile ec6 and minify.
 
 `html-minifier` is used to minify the html.

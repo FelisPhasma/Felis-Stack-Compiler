@@ -1,3 +1,7 @@
+function alpha(thisFunc, has, a, lot, ofvars){
+    return arguments[0] + this + has;
+}
+
 [1,2,3].map(n => n + 1);
 
 class SkinnedMesh {}

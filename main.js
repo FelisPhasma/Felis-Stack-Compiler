@@ -6,9 +6,13 @@ felisStack  SassDir CssOutDir
             HtmlDir
 */
 // TODO: multiple dirs as arg
-// TODO: asm.js would be nice
+// TODO: Source maps
+// TODO: JS Optimization
 const compileOnRun = true;
 let argvI = 2, // Args start at 2
+    LaunchVerb = process.argv[argvI++],
+    RootDir = process.argv[argvI++].replace("/", "\\"),
+    
     SassDir = process.argv[argvI++].replace("/", "\\"),
     CssOutDir = process.argv[argvI++].replace("/", "\\"),
     BabelDir = process.argv[argvI++].replace("/", "\\"),
@@ -27,7 +31,6 @@ let chokidar = require('chokidar'),
 let SassFiles = [],
     JsFiles = [],
     HtmlFiles = [];
-
 /*
  _____  ___   _____ _____ 
 /  ___|/ _ \ /  ___/  ___|
@@ -97,13 +100,19 @@ function initSASS(callback){
 */
 function jsUpdate(file) {
     let code = fs.readFileSync(file, 'utf8');
-    const result = babel.transform(code, {
-        presets: ["es2015"],
+    let compiled = babel.transform(code, {
+        presets: ["es2015", "babili"],
         babelrc: false,
         minified: true,
-        comments: false
+        comments: false,
+        sourceMaps: true, //"both",
+        filename: path.basename(file).split(".")[0] + ".js"
     });
-    fs.writeFile(__dirname + "\\" + JsOutDir + "\\" + path.basename(file).split(".")[0] + ".js", result.code, (err) => {
+    fs.writeFile(__dirname + "\\" + JsOutDir + "\\" + path.basename(file).split(".")[0] + ".js.map", JSON.stringify(compiled.map), (err) => {
+        if (err)
+            throw err;
+    });
+    fs.writeFile(__dirname + "\\" + JsOutDir + "\\" + path.basename(file).split(".")[0] + ".js", compiled.code + "\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map", (err) => {
         if (err)
             throw err;
         console.log("    Updated ", (BabelDir[BabelDir.length - 1] == "\\" ? BabelDir : BabelDir + "\\") + path.basename(file), ">", (JsOutDir[JsOutDir.length - 1] == "\\" ? JsOutDir : JsOutDir + "\\") + path.basename(file).split(".")[0] + ".js");
@@ -183,7 +192,7 @@ function htmlUpdate(file){
 }
 function initHTML(callback){
     // Compile all files that end in foobar.max.html
-    // Walk every file in the BabelDir
+    // Walk every file in the HtmlDir
     let fileWalker = walk.walk(__dirname + (HtmlDir[0] == "\\" || HtmlDir[0] == "/" ? HtmlDir.substring(1) : "\\" + HtmlDir), { followLinks: false });
     // For each file in dir, add to Babel Files if it is a sass/scss file
     fileWalker.on('file', (root, stat, next) => {
@@ -209,10 +218,18 @@ function initHTML(callback){
         callback && callback();
     });
 }
+
 !function init(){
-    console.log("> Init")
+    console.log("> Init");
     initSASS();
     initBABEL();
-    initHTML();
+    initHTML(()=>{
+        //console.log("done");
+    });
 }();
+// keeps the program running until aborted
+/*function timeout(){
+    setTimeout(timeout, 5000);
+}
+setTimeout(timeout, 5000);*/
 
