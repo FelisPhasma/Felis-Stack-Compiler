@@ -16,8 +16,15 @@ function help(){
                     <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
 `);
 }
+function escapeArg(arg){
+    return arg.replace(/\\/gi, "\\\\").replace(/"/gi, "\\\"");
+}
 function watch(args){
+    for(let i = 0, l = args.length; i < l; i++){
+        args[i] = escapeArg(args[i]);
+    }
     let command = `node ${appPath}\\main.js watch "${path.resolve(".")}" "${args.join(`" "`)}"`;
+    console.log(command);
     let child = exec(command, function(error, stdout, stderr){
         console.log(stderr);
         if (error !== null) {

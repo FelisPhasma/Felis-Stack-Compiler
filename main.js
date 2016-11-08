@@ -193,6 +193,7 @@ function htmlUpdate(file){
 function initHTML(callback){
     // Compile all files that end in foobar.max.html
     // Walk every file in the HtmlDir
+    console.log(__dirname + (HtmlDir[0] == "\\" || HtmlDir[0] == "/" ? HtmlDir.substring(1) : "\\" + HtmlDir));
     let fileWalker = walk.walk(__dirname + (HtmlDir[0] == "\\" || HtmlDir[0] == "/" ? HtmlDir.substring(1) : "\\" + HtmlDir), { followLinks: false });
     // For each file in dir, add to Babel Files if it is a sass/scss file
     fileWalker.on('file', (root, stat, next) => {
@@ -223,13 +224,11 @@ function initHTML(callback){
     console.log("> Init");
     initSASS();
     initBABEL();
-    initHTML(()=>{
-        //console.log("done");
-    });
+    initHTML();
 }();
-// keeps the program running until aborted
-/*function timeout(){
+// Chokidar will keep the program running, however if there are no files initially, this will keep it running.
+function timeout(){
     setTimeout(timeout, 5000);
 }
-setTimeout(timeout, 5000);*/
+setTimeout(timeout, 5000);
 
