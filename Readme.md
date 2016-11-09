@@ -10,12 +10,23 @@ This compiler automatically auto prefixes, compiles scss, and minifes css. Compi
 
 ```
 npm install -g felis-stack-compiler
-felis-stack-compiler ScssDir CssDir BabelDir JsDir ScriptsDir HtmlDir
+felis-stack watch ScssDir CssDir BabelDir JsDir ScriptsDir HtmlDir
 ```
 That's it!
 The compiler will automatically watch for changes in the files and re-compile when they are changed.
 
-You probably want to stick that last line in a batch or bash file that you can easily re-run  when you start working on the project.
+---
+## Command syntax
+
+```
+Usage: felis-stack <verb> [<args>]
+
+The verbs are:
+
+    help    Dispalys help
+    watch   Watches for changes and compiles. Arguments:
+                <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+```
 
 ----
 ## What's compiled

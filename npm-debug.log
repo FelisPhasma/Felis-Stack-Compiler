@@ -1,0 +1,128 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Users\\Felis\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   '-f',
+1 verbose cli   'publish' ]
+2 info using npm@3.10.6
+3 info using node@v6.9.1
+4 warn using --force I sure hope you know what you are doing.
+5 verbose publish [ '.' ]
+6 silly cache add args [ '.', null ]
+7 verbose cache add spec .
+8 silly cache add parsed spec Result {
+8 silly cache add   raw: '.',
+8 silly cache add   scope: null,
+8 silly cache add   escapedName: null,
+8 silly cache add   name: null,
+8 silly cache add   rawSpec: '.',
+8 silly cache add   spec: 'C:\\Users\\Felis\\Desktop\\programming\\Completed\\Felis Stack Compiler',
+8 silly cache add   type: 'directory' }
+9 verbose addLocalDirectory C:\Users\Felis\AppData\Roaming\npm-cache\felis-stack-compiler\1.0.0\package.tgz not in flight; packing
+10 verbose correctMkdir C:\Users\Felis\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+11 info lifecycle felis-stack-compiler@1.0.0~prepublish: felis-stack-compiler@1.0.0
+12 silly lifecycle felis-stack-compiler@1.0.0~prepublish: no script for prepublish, continuing
+13 verbose tar pack [ 'C:\\Users\\Felis\\AppData\\Roaming\\npm-cache\\felis-stack-compiler\\1.0.0\\package.tgz',
+13 verbose tar pack   'C:\\Users\\Felis\\Desktop\\programming\\Completed\\Felis Stack Compiler' ]
+14 verbose tarball C:\Users\Felis\AppData\Roaming\npm-cache\felis-stack-compiler\1.0.0\package.tgz
+15 verbose folder C:\Users\Felis\Desktop\programming\Completed\Felis Stack Compiler
+16 verbose addLocalTarball adding from inside cache C:\Users\Felis\AppData\Roaming\npm-cache\felis-stack-compiler\1.0.0\package.tgz
+17 verbose correctMkdir C:\Users\Felis\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+18 silly cache afterAdd felis-stack-compiler@1.0.0
+19 verbose afterAdd C:\Users\Felis\AppData\Roaming\npm-cache\felis-stack-compiler\1.0.0\package\package.json not in flight; writing
+20 verbose correctMkdir C:\Users\Felis\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+21 verbose afterAdd C:\Users\Felis\AppData\Roaming\npm-cache\felis-stack-compiler\1.0.0\package\package.json written
+22 silly publish { name: 'felis-stack-compiler',
+22 silly publish   version: '1.0.0',
+22 silly publish   description: 'A compiler and stack for front-end web development',
+22 silly publish   dependencies:
+22 silly publish    { autoprefixer: '^6.4.0',
+22 silly publish      'babel-core': '^6.13.2',
+22 silly publish      'babel-preset-es2015': '^6.18.0',
+22 silly publish      'babel-preset-babili': '^0.0.8',
+22 silly publish      chokidar: '^1.6.0',
+22 silly publish      crass: '^0.7.11',
+22 silly publish      'node-sass': '^3.8.0',
+22 silly publish      postcss: '^5.1.2',
+22 silly publish      walk: '^2.3.9',
+22 silly publish      'html-minifier': '^3.0.2' },
+22 silly publish   main: 'main.js',
+22 silly publish   scripts: {},
+22 silly publish   bin: { 'felis-stack': 'cli.js' },
+22 silly publish   keywords:
+22 silly publish    [ 'Frontend',
+22 silly publish      'Stack',
+22 silly publish      'Compiler',
+22 silly publish      'Sass',
+22 silly publish      'CSS',
+22 silly publish      'Babel',
+22 silly publish      'minifier' ],
+22 silly publish   author:
+22 silly publish    { name: 'Felis Phasma',
+22 silly publish      email: 'felisphasma@gmail.com',
+22 silly publish      url: 'felisphasma.github.io' },
+22 silly publish   license: 'Pending',
+22 silly publish   readme: '# Felis Stack Compiler\r\n\r\n----\r\nThe Felis Stack Compiler is a stack compiler for front end languages such as HTML, Scss, and Ec6.\r\n\r\nThis compiler automatically auto prefixes, compiles scss, and minifes css. Compiles ec6 to browser friendly JS, then minifies it. And minifies the HTML.\r\n\r\n----\r\n## Ussage\r\n\r\n```\r\nnpm install -g felis-stack-compiler\r\nfelis-stack watch ScssDir CssDir BabelDir JsDir ScriptsDir HtmlDir\r\n```\r\nThat\'s it!\r\nThe compiler will automatically watch for changes in the files and re-compile when they are changed.\r\n\r\n---\r\n## Command syntax\r\n\r\n```\r\nUsage: felis-stack <verb> [<args>]\r\n\r\nThe verbs are:\r\n\r\n    help    Dispalys help\r\n    watch   Watches for changes and compiles. Arguments:\r\n                <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>\r\n```\r\n\r\n----\r\n## What\'s compiled\r\n\r\nAll `.scss` files in the `ScssDir` are compiled into the `CssDir`. Node sass does not support sass files yet.\r\nAll the `.js` files in the `BabelDir` are compiled into the `JsDir`. \r\nAll files within the `HtmlDir` with a file extension of `.max.html` or `.max.htm` are compiled within their respective sub directory of the `HtmlDir`\r\n\r\n---\r\n## Technical notes\r\n\r\n`chokidar` is used to monitor files for changes\r\n\r\n`node-sass` is used to compile the Scss.\r\n`postcss` and `autoprefixer` are used to auto-prefix the CSS.\r\n`crass` is used to minify the css.\r\n\r\n`babel-core` is used to compile ec6 and minify.\r\n\r\n`html-minifier` is used to minify the html.\r\n',
+22 silly publish   readmeFilename: 'Readme.md',
+22 silly publish   gitHead: 'b7a72c8a150b75401753dbce636d3de4c34286fd',
+22 silly publish   _id: 'felis-stack-compiler@1.0.0',
+22 silly publish   _shasum: 'df8c119a12e2423a209236cd2527926a051915d9',
+22 silly publish   _from: '.' }
+23 verbose getPublishConfig undefined
+24 silly mapToRegistry name felis-stack-compiler
+25 silly mapToRegistry using default registry
+26 silly mapToRegistry registry https://registry.npmjs.org/
+27 silly mapToRegistry data Result {
+27 silly mapToRegistry   raw: 'felis-stack-compiler',
+27 silly mapToRegistry   scope: null,
+27 silly mapToRegistry   escapedName: 'felis-stack-compiler',
+27 silly mapToRegistry   name: 'felis-stack-compiler',
+27 silly mapToRegistry   rawSpec: '',
+27 silly mapToRegistry   spec: 'latest',
+27 silly mapToRegistry   type: 'tag' }
+28 silly mapToRegistry uri https://registry.npmjs.org/felis-stack-compiler
+29 verbose publish registryBase https://registry.npmjs.org/
+30 silly publish uploading C:\Users\Felis\AppData\Roaming\npm-cache\felis-stack-compiler\1.0.0\package.tgz
+31 verbose request uri https://registry.npmjs.org/felis-stack-compiler
+32 verbose request sending authorization for write operation
+33 info attempt registry request try #1 at 11:55:14 AM
+34 verbose request using bearer token for auth
+35 verbose request id 49ec6f823d5cb3a1
+36 http request PUT https://registry.npmjs.org/felis-stack-compiler
+37 http 403 https://registry.npmjs.org/felis-stack-compiler
+38 verbose headers { 'content-type': 'application/json',
+38 verbose headers   'cache-control': 'max-age=300',
+38 verbose headers   'content-length': '128',
+38 verbose headers   'accept-ranges': 'bytes',
+38 verbose headers   date: 'Wed, 09 Nov 2016 18:55:17 GMT',
+38 verbose headers   via: '1.1 varnish',
+38 verbose headers   connection: 'keep-alive',
+38 verbose headers   'x-served-by': 'cache-ord1736-ORD',
+38 verbose headers   'x-cache': 'MISS',
+38 verbose headers   'x-cache-hits': '0',
+38 verbose headers   'x-timer': 'S1478717717.132516,VS0,VE709',
+38 verbose headers   vary: 'Accept-Encoding' }
+39 verbose request invalidating C:\Users\Felis\AppData\Roaming\npm-cache\registry.npmjs.org\felis-stack-compiler on PUT
+40 error publish Failed PUT 403
+41 verbose stack Error: "You cannot publish over the previously published version 1.0.0. Try bumping the version to 2.0.0" : felis-stack-compiler
+41 verbose stack     at makeError (C:\Users\Felis\AppData\Roaming\npm\node_modules\npm\node_modules\npm-registry-client\lib\request.js:264:12)
+41 verbose stack     at CachingRegistryClient.<anonymous> (C:\Users\Felis\AppData\Roaming\npm\node_modules\npm\node_modules\npm-registry-client\lib\request.js:252:14)
+41 verbose stack     at Request._callback (C:\Users\Felis\AppData\Roaming\npm\node_modules\npm\node_modules\npm-registry-client\lib\request.js:172:14)
+41 verbose stack     at Request.self.callback (C:\Users\Felis\AppData\Roaming\npm\node_modules\npm\node_modules\request\request.js:200:22)
+41 verbose stack     at emitTwo (events.js:106:13)
+41 verbose stack     at Request.emit (events.js:191:7)
+41 verbose stack     at Request.<anonymous> (C:\Users\Felis\AppData\Roaming\npm\node_modules\npm\node_modules\request\request.js:1067:10)
+41 verbose stack     at emitOne (events.js:101:20)
+41 verbose stack     at Request.emit (events.js:188:7)
+41 verbose stack     at IncomingMessage.<anonymous> (C:\Users\Felis\AppData\Roaming\npm\node_modules\npm\node_modules\request\request.js:988:12)
+42 verbose statusCode 403
+43 verbose pkgid felis-stack-compiler
+44 verbose cwd C:\Users\Felis\Desktop\programming\Completed\Felis Stack Compiler
+45 error Windows_NT 10.0.14393
+46 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Users\\Felis\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js" "-f" "publish"
+47 error node v6.9.1
+48 error npm  v3.10.6
+49 error code E403
+50 error "You cannot publish over the previously published version 1.0.0. Try bumping the version to 2.0.0" : felis-stack-compiler
+51 error If you need help, you may report this error at:
+51 error     <https://github.com/npm/npm/issues>
+52 verbose exit [ 1, true ]
