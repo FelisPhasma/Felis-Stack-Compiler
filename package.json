@@ -1,33 +1,37 @@
 {
-  "name": "felis-stack-compiler",
-  "version": "1.0.0",
-  "description": "A compiler and stack for front-end web development",
-  "dependencies": {
-    "autoprefixer": "^6.4.0",
-    "babel-core": "^6.13.2",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-babili": "^0.0.8",
-    "chokidar": "^1.6.0",
-    "crass": "^0.7.11",
-    "node-sass": "^3.8.0",
-    "postcss": "^5.1.2",
-    "walk": "^2.3.9",
-    "html-minifier": "^3.0.2"
-  },
-  "main": "main.js",
-  "scripts": {},
-  "bin": {
-    "felis-stack": "cli.js"
-  },
-  "keywords": [
-    "Frontend",
-    "Stack",
-    "Compiler",
-    "Sass",
-    "CSS",
-    "Babel",
-    "minifier"
-  ],
-  "author": "Felis Phasma <felisphasma@gmail.com> (felisphasma.github.io)",
-  "license": "Pending"
+    "name": "felis-stack-compiler",
+    "version": "1.0.1",
+    "description": "A compiler and stack for front-end web development",
+    "dependencies": {
+        "autoprefixer": "^6.4.0",
+        "babel-core": "^6.13.2",
+        "babel-preset-es2015": "^6.18.0",
+        "babel-preset-babili": "^0.0.8",
+        "chokidar": "^1.6.0",
+        "crass": "^0.7.11",
+        "node-sass": "^3.8.0",
+        "postcss": "^5.1.2",
+        "walk": "^2.3.9",
+        "html-minifier": "^3.0.2"
+    },
+    "main": "main.js",
+    "scripts": {},
+    "bin": {
+        "felis-stack": "cli.js"
+    },
+    "keywords": [
+        "Frontend",
+        "Stack",
+        "Compiler",
+        "Sass",
+        "CSS",
+        "Babel",
+        "minifier"
+    ],
+    "repository" : { 
+        "type" : "git", 
+        "url" : "https://github.com/FelisPhasma/Felis-Stack-Compiler.git"
+    },
+    "author": "Felis Phasma <felisphasma@gmail.com> (felisphasma.github.io)",
+    "license": "FOSSL-G"
 }

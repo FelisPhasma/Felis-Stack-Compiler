@@ -44,6 +44,12 @@ All files within the `HtmlDir` with a file extension of `.max.html` or `.max.htm
 `postcss` and `autoprefixer` are used to auto-prefix the CSS.
 `crass` is used to minify the css.
 
-`babel-core` is used to compile ec6 and minify.
+`babel-core` is used to compile ec6 and the `babili` preset is used to minify.
 
 `html-minifier` is used to minify the html.
+
+---
+
+## License
+
+FOSSL-G. More info at https://github.com/FelisPhasma/Felis-Licenses
