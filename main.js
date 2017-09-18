@@ -16,8 +16,26 @@ let chokidar = require('chokidar'),
 const Verb = process.argv[2];
 const Root = process.argv[3].replace("/", "\\") + "\\";
 const Params = process.argv.slice(4);
-const CompileOnRun = false;
+const CompileOnRun = true;
 
+// Simple console manager class so that console.log doesn't print ontop of
+// another console log when multiple lines of asyncronous code are logging shit
+// to the console
+class ConsoleManager {
+	log() {
+		this.queue.push(arguments);
+	}
+	constructor(interval){
+		this.queue = [];
+		setInterval(()=>{
+			if(this.queue.length > 0){
+				console.log.apply(this, this.queue[0]);
+				this.queue.shift();
+			}
+		}, interval ? interval : 100);
+	}
+}
+const Console = new ConsoleManager();
 class stackCompiler{
 	// File Updating
 	sassUpdate(file) {
@@ -36,10 +54,12 @@ class stackCompiler{
 	        let parsed = crass.parse(result.css),
 	            compressedCss = parsed.toString();
 	        // write
-	        fs.writeFile(RootDir + "\\" + CssOutDir + "\\" + path.basename(file).split(".")[0] + ".css", compressedCss, (err) => {
+			// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
+			let out = Params.length == 5 ? Root + "\\" + Params[1] + "\\" : path.dirname(file) + "\\";
+	        fs.writeFile(out + path.basename(file).split(".")[0] + ".css", compressedCss, (err) => {
 	            if (err)
 	                throw err;
-	            console.log("	Updated ", (SassDir[SassDir.length - 1] == "\\" ? SassDir : SassDir + "\\") + path.basename(file), ">", (CssOutDir[CssOutDir.length - 1] == "\\" ? CssOutDir : CssOutDir + "\\") + path.basename(file).split(".")[0] + ".css");
+	            Console.log("\tUpdated ", file, ">", out + path.basename(file).split(".")[0] + ".css");
 	        });
 	    });
 	}
@@ -56,17 +76,19 @@ class stackCompiler{
 	            filename: path.basename(file).split(".")[0] + ".js"
 	        });
 	    } catch(err) {
-	        console.log("\t" + err);
+	        Console.log("\t" + err);
 	        return;
 	    }
-	    fs.writeFile(RootDir + "\\" + JsOutDir + "\\" + path.basename(file).split(".")[0] + ".js.map", JSON.stringify(compiled.map), (err) => {
+		// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
+		let out = Params.length == 5 ? Root + "\\" + Params[3] + "\\" : path.dirname(file) + "\\";
+	    fs.writeFile(out + path.basename(file).split(".")[0] + ".js.map", JSON.stringify(compiled.map), (err) => {
 	        if (err)
 	            throw err;
 	    });
-	    fs.writeFile(RootDir + "\\" + JsOutDir + "\\" + path.basename(file).split(".")[0] + ".js", compiled.code + "\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map", (err) => {
+	    fs.writeFile(out + path.basename(file).split(".")[0] + ".js", compiled.code + "\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map", (err) => {
 	        if (err)
 	            throw err;
-	        console.log("    Updated ", (BabelDir[BabelDir.length - 1] == "\\" ? BabelDir : BabelDir + "\\") + path.basename(file), ">", (JsOutDir[JsOutDir.length - 1] == "\\" ? JsOutDir : JsOutDir + "\\") + path.basename(file).split(".")[0] + ".js");
+	        Console.log("\tUpdated ", file, ">", out + path.basename(file).split(".")[0] + ".js");
 	    });
 	}
 	htmlUpdate(file){
@@ -77,7 +99,6 @@ class stackCompiler{
 	        collapseBooleanAttributes: true,
 	        collapseInlineTagWhitespace: true,
 	        collapseWhitespace: true,
-	        conservativeCollapse: true, // This is because of a bug where two <nobr> tags back to back like '...</nobr><nobr>...' still don't break
 	        keepClosingSlash: true,
 	        minifyCSS: true,
 	        minifyJS: true,
@@ -87,17 +108,15 @@ class stackCompiler{
 	        removeScriptTypeAttributes: true,
 	        removeStyleLinkTypeAttribute: true
 	    });
-	    fs.writeFile(path.dirname(file) + "\\" + (path.basename(file).replace(".max", "")), comp, (err) => {
+		// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
+		let out = Params.length == 5 ? Root + "\\" + Params[3] + "\\" : path.dirname(file) + "\\";
+	    fs.writeFile(out + (path.basename(file).replace(".max", "")), comp, (err) => {
 	        if (err)
 	            throw err;
-	        console.log("    Updated ",
-	                    (HtmlDir[HtmlDir.length - 1] == "\\" ?
-	                        HtmlDir :
-	                        HtmlDir + "\\") + path.basename(file),
+	        Console.log("\tUpdated ",
+	                    file,
 	                    ">",
-	                    (path.dirname(file) + "\\" + (path.basename(file).replace(".max", ""))).indexOf(path.resolve(HtmlDir), "") == 0 ?
-	                    (path.dirname(file) + "\\" + (path.basename(file).replace(".max", ""))).substr(path.resolve(HtmlDir).length).replace(/^\\+/gi, "") :
-	                    (path.dirname(file) + "\\" + (path.basename(file).replace(".max", ""))));
+	                    out + path.basename(file).split(".")[0] + ".html");
 	    });
 	}
 	// Find files
@@ -105,35 +124,37 @@ class stackCompiler{
 		let fileWalker = walk.walk(Root + dir, { followLinks: false }),
 			files = [];
 		fileWalker.on('file', (root, stat, next) => {
-	        let fExt = path.extname(stat.name).toLowerCase();
-	        if(ext.indexOf(fExt) > -1){
-	            files.push((root + '/' + stat.name).replace(/\//, "\\"));
-	        }
+			// Because html code looks for .max.html this code has to be used instead of just checking path.extname() against the extentions
+			for(let e of ext) {
+				let i = stat.name.indexOf(e);
+				if(i > -1 && i == stat.name.length - e.length){
+					files.push((root + '/' + stat.name).replace(/\//, "\\"));
+				}
+			}
 	        next();
 	    });
 		fileWalker.on('end', () => {
 			console.log(files);
-			return;
 			for(let file of files){
-				let watcher = chokidar.watch(hfile);
+				let watcher = chokidar.watch(file);
 	            watcher.on('change', (path) => {
-	                console.log("> Change detected to: ", path);
+	                Console.log("> Change detected to: ", path);
 	                updater(path);
 	            });
-	            if(compileOnRun){
-	                updater(hfile);
+	            if(CompileOnRun){
+	                updater(file);
 	            }
 			}
 		});
 	}
 	// Initialize
 	constructor(){
-		console.log("> constructor start");
+		Console.log("> constructor start");
 		// Find files
 		this.findFiles(
 			[".max.html", ".max.htm"],
 			Params.length == 1 ? Params[0] : (Params.length == 3 ? Params[0] : /*else length = 5*/ Params[0]),
-			(file) => { this.htmlUpdate(file); });*/
+			(file) => { this.htmlUpdate(file); });
 		this.findFiles(
 			[".babl"],
 			Params.length == 1 ? Params[0] : (Params.length == 3 ? Params[1] : /*else length = 5*/ Params[2]),
@@ -141,10 +162,10 @@ class stackCompiler{
 		this.findFiles(
 			[".scss"],
 			Params.length == 1 ? Params[0] : (Params.length == 3 ? Params[2] : /*else length = 5*/ Params[4]),
-			(file) => { this.sassUpdate(file); });*/
+			(file) => { this.sassUpdate(file); });
 	}
 }
-function init(){
+~function(){
 	let timeout = () => {
 	    setTimeout(timeout, 5000);
 	};
@@ -155,17 +176,18 @@ function init(){
 	} else if(Params.length == 5){
 
 	} else {
-		console.log("Improper arguments");
+		Console.log("Improper arguments");
 		process.exit(1);
 	}
-	console.log("> Init");
-	console.log(Params);
+	Console.log("> Init");
 	let sc = new stackCompiler();
 	// TODO: Check for new files every 10 seconds or so?
 	// Timeout keeps the code running
 	setTimeout(timeout, 5000);
-}
-init();
+}();
 // TODO: --ignore dir dir dir dir
 // TODO: --Check
 //			stop or change how often the program scans for new files
+// TODO: PHP
+// Chocidar watch newfile
+// TODO: Error handling

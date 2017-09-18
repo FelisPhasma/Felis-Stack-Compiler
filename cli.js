@@ -38,7 +38,7 @@ class Cli {
 					<Dir>
 					<SassDir> <BabelDir> <HtmlDir>
 					<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
-		compile	Compiles, doesn't listen.
+		compile Compiles, doesn't listen.
 					<Dir>
 					<SassDir> <BabelDir> <HtmlDir>
 					<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
@@ -74,7 +74,7 @@ const verbs = {
 	"compile": Cli.compile,
 	"c": Cli.compile
 };
-!function init(){
+~function init(){
 	let verb;
 	if(process.argv.length < 3){
 	    verb = "h";
