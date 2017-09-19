@@ -1,16 +1,19 @@
 # Felis Stack Compiler
 
 ----
-The Felis Stack Compiler is a stack compiler for front end languages such as HTML, Scss, and Ec6.
+The Felis Stack Compiler is a stack compiler for front web development.
+It's a simple and easy way to manage, compress, and compile Sass, Ec6, and Html.
 
-This compiler automatically auto prefixes, compiles scss, and minifes css. Compiles ec6 to browser friendly JS, then minifies it. And minifies the HTML.
+- Html code is compressed down to optimize load time
+- Scss is compiled to CSS, auto-prefixed, and then compressed
+- And thanks to Babel, Ec6 Js is compiled to cross-browser friendly Js
 
 ----
 ## Ussage
 
 ```
 npm install -g felis-stack-compiler
-felis-stack watch \
+felis-stack w \
 ```
 That's it!
 The compiler will automatically watch for changes in the files and compile sources when they are changed.
@@ -35,16 +38,16 @@ The verbs are:
 
 Extentions:
 	".max.htm" and ".max.html" files are compressed
-	".babl" files are compressed
+	".js" and ".ec6" files are compressed
 	".scss" files are compressed
 ```
 
 ----
 ## What's compiled
 
-`.scss` files are compiled
-`.babl` files are compiled
-`.max.html` or `.max.htm` files are compiled
+`.scss` files are compiled and compressed
+`.js` and `.ec6` files are compiled and compressed
+`.max.html` and `.max.htm` files are compressed
 
 ---
 ## Technical notes

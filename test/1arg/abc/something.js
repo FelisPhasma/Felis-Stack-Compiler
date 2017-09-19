@@ -1,2 +1,43 @@
-"use strict";function _defineProperty(obj,key,value){return key in obj?Object.defineProperty(obj,key,{value:value,enumerable:!0,configurable:!0,writable:!0}):obj[key]=value,obj}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor))throw new TypeError("Cannot call a class as a function")}function alpha(c,d){return arguments[0]+this+d}[1,2,3].map(function(c){return c+1});var SkinnedMesh=function SkinnedMesh(){_classCallCheck(this,SkinnedMesh)};var obj={test:function test(){}},t="In ES5 this is\n not legal.",_ref=[1,2,3],a=_ref[0],b=_ref[2];function f(c){return c*(1>=arguments.length?0:arguments.length-1)}6==f(3,"hello",!0);var fibonacci=_defineProperty({},Symbol.iterator,function(){var c=0,d=1;return{next:function next(){var _ref2=[d,c+d];return c=_ref2[0],d=_ref2[1],{done:!1,value:d}}}});var _iteratorNormalCompletion=!0,_didIteratorError=!1,_iteratorError=void 0;try{for(var _step,n,_iterator=fibonacci[Symbol.iterator]();!(_iteratorNormalCompletion=(_step=_iterator.next()).done)&&(n=_step.value,!(1e3<n));_iteratorNormalCompletion=!0)console.log(n)}catch(err){_didIteratorError=!0,_iteratorError=err}finally{try{!_iteratorNormalCompletion&&_iterator.return&&_iterator.return()}finally{if(_didIteratorError)throw _iteratorError}}
-//# sourceMappingURL=something.js.map
+function alpha(thisFunc, has, a, lot, ofvars){
+    return arguments[0] + this + has;
+}
+
+[1,2,3].map(n => n + 1);
+
+class SkinnedMesh {}
+
+const obj = {
+    test() {
+
+    }
+}
+
+const t = `In ES5 this is
+ not legal.`;
+
+var [a, ,b] = [1,2,3];
+
+function f(x, ...y) {
+  // y is an Array
+  return x * y.length;
+}
+f(3, "hello", true) == 6
+
+let fibonacci = {
+  [Symbol.iterator]() {
+    let pre = 0, cur = 1;
+    return {
+      next() {
+        [pre, cur] = [cur, pre + cur];
+        return { done: false, value: cur }
+      }
+    }
+  }
+}
+
+for (var n of fibonacci) {
+  // truncate the sequence at 1000
+  if (n > 1000)
+    break;
+  console.log(n);
+}

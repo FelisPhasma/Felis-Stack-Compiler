@@ -119,10 +119,10 @@ class stackCompiler{
 	        if (err)
 	            throw err;
 	    });
-	    fs.writeFile(out + path.basename(file).split(".")[0] + ".js", compiled.code + "\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map", (err) => {
+	    fs.writeFile(out + path.basename(file).split(".")[0] + ".min.js", compiled.code + "\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map", (err) => {
 	        if (err)
 	            throw err;
-	        Console.log(Color.TextGreen + "\tUpdated" + Color.Reset, file.replace(Root, "").replace(/\\+/gi, "\\"), ">", (out + path.basename(file).split(".")[0] + ".js").replace(Root, "").replace(/\\+/gi, "\\").replace(/^\\/i,""));
+	        Console.log(Color.TextGreen + "\tUpdated" + Color.Reset, file.replace(Root, "").replace(/\\+/gi, "\\"), ">", (out + path.basename(file).split(".")[0] + ".min.js").replace(Root, "").replace(/\\+/gi, "\\").replace(/^\\/i,""));
 	    });
 	}
 	htmlUpdate(file){
@@ -151,16 +151,28 @@ class stackCompiler{
 	    });
 	}
 	// Find files
-	findFiles(ext, dir, updater){
+	findFiles(ext, dir, updater, extExclude){
 		let fileWalker = walk.walk(Root + dir, { followLinks: false }),
 			files = [];
 		fileWalker.on('file', (root, stat, next) => {
+			let toPush = false;
 			// Because html code looks for .max.html this code has to be used instead of just checking path.extname() against the extentions
 			for(let e of ext) {
 				let i = stat.name.indexOf(e);
 				if(i > -1 && i == stat.name.length - e.length){
-					files.push((root + '/' + stat.name).replace(/\//, "\\"));
+					toPush = true;
 				}
+			}
+			if(extExclude){
+				for(let e of extExclude) {
+					let i = stat.name.indexOf(e);
+					if(i > -1 && i == stat.name.length - e.length){
+						toPush = false;
+					}
+				}
+			}
+			if(toPush){
+				files.push((root + '/' + stat.name).replace(/\//, "\\"));
 			}
 	        next();
 	    });
@@ -187,9 +199,9 @@ class stackCompiler{
 			Params.length == 1 ? Params[0] : (Params.length == 3 ? Params[0] : /*else length = 5*/ Params[0]),
 			(file) => { this.sassUpdate(file); });
 		this.findFiles(
-			[".babl"],
+			[".js", ".ec6"],
 			Params.length == 1 ? Params[0] : (Params.length == 3 ? Params[1] : /*else length = 5*/ Params[2]),
-			(file) => { this.jsUpdate(file); });
+			(file) => { this.jsUpdate(file); }, [".min.js"]);
 		this.findFiles(
 			[".max.html", ".max.htm"],
 			Params.length == 1 ? Params[0] : (Params.length == 3 ? Params[2] : /*else length = 5*/ Params[4]),
