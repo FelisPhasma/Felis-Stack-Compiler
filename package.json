@@ -1,6 +1,6 @@
 {
     "name": "felis-stack-compiler",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "A stack compiler for front-end web development",
     "dependencies": {
 		"autoprefixer": "^6.4.0",

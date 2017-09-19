@@ -14,6 +14,7 @@ const Verb = process.argv[2];
 const Root = process.argv[3].replace("/", "\\") + "\\";
 const Params = process.argv.slice(4);
 var   CompileOnRun = true;
+const DEBUG = false;
 
 // Simple console manager class so that console.log doesn't print ontop of
 // another console log when multiple lines of asyncronous code are logging shit
@@ -23,14 +24,20 @@ class ConsoleManager {
 		this.queue.push(arguments);
 	}
 	flush() {
+		this.pauseInterval = true;
 		console.log.apply(this, this.queue[0]);
 		this.queue.shift();
-		if(this.queue.length > 0)
+		if(this.queue.length == 0)
+			this.pauseInterval = false;
+		else
 			this.flush();
 	}
 	constructor(interval){
 		this.queue = [];
+		this.pauseInterval = false;
 		setInterval(()=>{
+			if(this.pauseInterval)
+				return;
 			if(this.queue.length > 0){
 				console.log.apply(this, this.queue[0]);
 				this.queue.shift();
@@ -76,26 +83,40 @@ class stackCompiler{
 		// TODO: Coordinate sync...
 	    // compile sass
 	    let sass = fs.readFileSync(file, 'utf8');
-	    let css = nodeSass.renderSync({
-	        data: sass
-	    });
-	    // auto-prefix
-	    postcss([autoprefixer]).process(css.css.toString()).then((result) => {
-	        result.warnings().forEach((warn) => {
-	            console.warn(warn.toString());
-	        });
-	        // minify
-	        let parsed = crass.parse(result.css),
-	            compressedCss = parsed.toString();
-	        // write
-			// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
+		if (/^\s+$/.test(sass) || sass == "")
+		{
+			// string contains only whitespace
+			// prevent bug with feeding node-sass empty strings
 			let out = Params.length == 5 ? Root + "\\" + Params[1] + "\\" : path.dirname(file) + "\\";
-	        fs.writeFile(out + path.basename(file).split(".")[0] + ".css", compressedCss, (err) => {
-	            if (err)
-	                throw err;
-	            Console.log(Color.TextGreen + "\tUpdated" + Color.Reset, file.replace(Root, "").replace(/\\+/gi, "\\"), ">", (out + path.basename(file).split(".")[0] + ".css").replace(Root, "").replace(/\\+/gi, "\\").replace(/^\\/i,""));
-	        });
-	    });
+			fs.writeFile(out + path.basename(file).split(".")[0] + ".css", "", (err) => {
+				if (err)
+				  throw err;
+				Console.log(Color.TextGreen + "\tUpdated" + Color.Reset, file.replace(Root, "").replace(/\\+/gi, "\\"), ">", (out + path.basename(file).split(".")[0] + ".css").replace(Root, "").replace(/\\+/gi, "\\").replace(/^\\/i,""));
+				Console.log(Color.TextYellow + "\t\tNotice: Empty file" + Color.Reset);
+			});
+		} else {
+			// procede normally
+			let css = nodeSass.renderSync({
+		        data: sass
+		    });
+		    // auto-prefix
+		    postcss([autoprefixer]).process(css.css.toString()).then((result) => {
+		        result.warnings().forEach((warn) => {
+		            console.warn(warn.toString());
+		        });
+		        // minify
+		        let parsed = crass.parse(result.css),
+		            compressedCss = parsed.toString();
+		        // write
+				// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
+				let out = Params.length == 5 ? Root + "\\" + Params[1] + "\\" : path.dirname(file) + "\\";
+		        fs.writeFile(out + path.basename(file).split(".")[0] + ".css", compressedCss, (err) => {
+		            if (err)
+		                throw err;
+		            Console.log(Color.TextGreen + "\tUpdated" + Color.Reset, file.replace(Root, "").replace(/\\+/gi, "\\"), ">", (out + path.basename(file).split(".")[0] + ".css").replace(Root, "").replace(/\\+/gi, "\\").replace(/^\\/i,""));
+		        });
+		    });
+		}
 	}
 	jsUpdate(file) {
 	    let code = fs.readFileSync(file, 'utf8');
@@ -152,6 +173,8 @@ class stackCompiler{
 	}
 	// Find files
 	findFiles(ext, dir, updater, extExclude){
+		if(DEBUG)
+			Console.log(Color.BgYellow + Color.TextBlack + dir + Color.Reset);
 		let fileWalker = walk.walk(Root + dir, { followLinks: false }),
 			files = [];
 		fileWalker.on('file', (root, stat, next) => {
@@ -177,6 +200,8 @@ class stackCompiler{
 	        next();
 	    });
 		fileWalker.on('end', () => {
+			if(DEBUG)
+				Console.log(Color.TextYellow, files, Color.Reset);
 			for(let file of files){
 				if(Verb == "watch") {
 					let watcher = chokidar.watch(file);
@@ -243,3 +268,4 @@ class stackCompiler{
 // TODO: PHP
 // Chocidar watch newfile
 // TODO: Error handling
+// TODO: --DEBUG
