@@ -216,6 +216,7 @@ class stackCompiler{
 		// Force the CompileOnRun flag
 		CompileOnRun = true;
 	}
+	// Nothing needs to be done, but I'm leaving in the if-else constructs anyway in case I need them in the future
 	if(Params.length == 1){
 
 	} else if(Params.length == 3){

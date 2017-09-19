@@ -16,6 +16,7 @@ npm install -g felis-stack-compiler
 felis-stack w \
 ```
 That's it!
+
 The compiler will automatically watch for changes in the files and compile sources when they are changed.
 
 ---
@@ -46,17 +47,22 @@ Extentions:
 ## What's compiled
 
 `.scss` files are compiled and compressed
+
 `.js` and `.ec6` files are compiled and compressed
+
 `.max.html` and `.max.htm` files are compressed
 
 ---
 ## Technical notes
 
 `walk` is used to find files
+
 `chokidar` is used to monitor files for changes
 
 `node-sass` is used to compile the Scss.
+
 `postcss` and `autoprefixer` are used to auto-prefix the CSS.
+
 `crass` is used to minify the css.
 
 `babel-core` is used to compile ec6 and the `babili` preset is used to minify.
