@@ -8,7 +8,7 @@ class ChildProcess {
 		console.log(data.toString().replace(/\n/gi, ""));
 	}
 	onClose(code){
-		console.log("Felis-stack exited with code ", code);
+		console.log("Felis-Stack exited with code ", code);
 		process.exit(code);
 	}
 	constructor(command){
@@ -54,7 +54,6 @@ class Cli {
 	        args[i] = Cli._escapeArg(args[i]);
 	    }
 	    let command = `node \"${appPath}\\main.js\" watch "${path.resolve(".")}" "${args.join(`" "`)}"`;
-	    console.log(command);
 		let child = new ChildProcess(command);
 	}
 	static compile(args){

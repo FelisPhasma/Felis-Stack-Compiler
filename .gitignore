@@ -2,3 +2,5 @@ __AlphaVersion/
 node_modules/
 .gitignore
 test/TestSave/
+# gource script :P
+visualize.bat

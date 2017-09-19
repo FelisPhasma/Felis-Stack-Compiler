@@ -10,10 +10,10 @@ This compiler automatically auto prefixes, compiles scss, and minifes css. Compi
 
 ```
 npm install -g felis-stack-compiler
-felis-stack watch ScssDir CssDir BabelDir JsDir ScriptsDir HtmlDir
+felis-stack watch \
 ```
 That's it!
-The compiler will automatically watch for changes in the files and re-compile when they are changed.
+The compiler will automatically watch for changes in the files and compile sources when they are changed.
 
 ---
 ## Command syntax
@@ -23,21 +23,33 @@ Usage: felis-stack <verb> [<args>]
 
 The verbs are:
 
-    help    Dispalys help
-    watch   Watches for changes and compiles. Arguments:
-                <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+	help    Dispalys help
+	watch   Watches for changes and compiles. Arguments:
+				<Dir>
+				<SassDir> <BabelDir> <HtmlDir>
+				<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+	compile Compiles, doesn't listen.
+				<Dir>
+				<SassDir> <BabelDir> <HtmlDir>
+				<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+
+Extentions:
+	".max.htm" and ".max.html" files are compressed
+	".babl" files are compressed
+	".scss" files are compressed
 ```
 
 ----
 ## What's compiled
 
-All `.scss` files in the `ScssDir` are compiled into the `CssDir`. Node sass does not support sass files yet.
-All the `.js` files in the `BabelDir` are compiled into the `JsDir`. 
-All files within the `HtmlDir` with a file extension of `.max.html` or `.max.htm` are compiled within their respective sub directory of the `HtmlDir`
+`.scss` files are compiled
+`.babl` files are compiled
+`.max.html` or `.max.htm` files are compiled
 
 ---
 ## Technical notes
 
+`walk` is used to find files
 `chokidar` is used to monitor files for changes
 
 `node-sass` is used to compile the Scss.
@@ -52,4 +64,4 @@ All files within the `HtmlDir` with a file extension of `.max.html` or `.max.htm
 
 ## License
 
-FOSSL-G. More info at https://github.com/FelisPhasma/Felis-Licenses
+... undecided

@@ -16,7 +16,7 @@
     },
     "main": "main.js",
     "scripts": {
-		"test": "node main.js test\\sassy test\\styles test\\babel test\\scripts test\\ & pause"
+		"test": "node cli.js -w test\\1arg & pause"
 	},
     "bin": {
         "felis-stack": "cli.js"
@@ -28,12 +28,12 @@
         "Sass",
         "CSS",
         "Babel",
+		"Ec6",
         "minifier"
     ],
     "repository" : {
         "type" : "git",
         "url" : "https://github.com/FelisPhasma/Felis-Stack-Compiler.git"
     },
-    "author": "Felis Phasma <felisphasma@gmail.com> (felisphasma.github.io)",
-    "license": "FOSSL-G"
+    "author": "Felis Phasma <felisphasma@gmail.com> (felisphasma.github.io)"
 }
