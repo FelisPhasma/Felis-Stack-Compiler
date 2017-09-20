@@ -3,6 +3,7 @@
 const path = require("path");
 const appPath = path.dirname(process.argv[1]);
 const exec = require('child_process').exec;
+const packageInfo = require('./package.json');
 class ChildProcess {
 	onData(data){
 		console.log(data.toString().replace(/\n/gi, ""));
@@ -45,14 +46,17 @@ class Cli {
 
 	The args are:
 
-		--debug
-				Prints debug information while code is running
+		--debug <level>
+				Prints debug information while code is running. Level (0 - 2)
+				indicates how much debug info to print. 0(default) is least, 2 is most
 		--ignore [dir, dir, ...]
 				Ignores certian dirs
 		--check <n>
 				Checks for new files every n seconds.
 				0 = don't check
 				Default = 0
+		--compileOnRun
+				Compile files initially when felis-stack is called
 
 	Extentions:
 		".max.htm" and ".max.html" files are compressed
@@ -84,14 +88,19 @@ const verbs = {
 	"c": Cli.compile
 };
 ~function init(){
+	console.log(`${packageInfo.name} version ${packageInfo.version}`);
 	let verb;
 	if(process.argv.length < 3){
 	    verb = "h";
 	} else {
 	    verb = (process.argv[2][0] == "-" ? process.argv[2].substr(1) : process.argv[2]).toLowerCase();
 	}
-	if(verbs[verb] == undefined)
+	if(verbs[verb] == undefined){
+		console.log("Error: Unknown verb \"" + verb + "\"");
 		verb = "h";
+	}
 	verbs[verb](Array.prototype.slice.call(process.argv, 3));
 }();
 // TODO: Fix bug with help message display
+// TODO: Colors?
+// TODO: Console management in cli.js?

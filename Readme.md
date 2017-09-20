@@ -39,14 +39,17 @@ The verbs are:
 
 The args are:
 
-	--debug
-			Prints debug information while code is running
+	--debug <level>
+			Prints debug information while code is running. Level (0 - 2)
+			indicates how much debug info to print. 0(default) is least, 2 is most
 	--ignore [dir, dir, ...]
 			Ignores certian dirs
 	--check <n>
 			Checks for new files every n seconds.
 			0 = don't check
 			Default = 0
+	--compileOnRun
+			Compile files initially when felis-stack is called
 
 Extentions:
 	".max.htm" and ".max.html" files are compressed

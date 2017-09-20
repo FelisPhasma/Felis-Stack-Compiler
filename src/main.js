@@ -1,6 +1,10 @@
 "use strict";
-var DEBUG = false;
-let chokidar = require('chokidar'),
+var DEBUG = false,
+	debugLevel = 0;
+const Verb = process.argv[2];
+const Root = process.argv[3].replace("/", "\\") + "\\";
+const Params = process.argv.slice(4);
+var chokidar = require('chokidar'),
     autoprefixer = require('autoprefixer'),
     postcss = require('postcss'),
     crass = require('crass'),
@@ -10,16 +14,27 @@ let chokidar = require('chokidar'),
     fs = require('fs'),
     walk = require('walk'),
     path = require('path');
-
-const Verb = process.argv[2];
-const Root = process.argv[3].replace("/", "\\") + "\\";
-const Params = process.argv.slice(4);
-let DirParams = [];
-let IgnoredDirs = [];
-let CompileOnRun = true;
-let WatchedFiles = [];
-let CheckNewFiles = 0;
-
+var DirParams = [],
+	IgnoredDirs = [],
+	CompileOnRun = false,
+	WatchedFiles = [],
+	CheckNewFiles = 0;
+var sc;
+const flags = {
+	"ignore": (args) => {
+		Array.prototype.push.apply(IgnoredDirs, args);
+	},
+	"check": (args) => {
+		CheckNewFiles = 1000 * parseInt(args[0]);
+	},
+	"debug": (args) => {
+		DEBUG = true;
+		debugLevel = parseInt(args[0]) || 0;
+	},
+	"compileonrun": () => {
+		CompileOnRun = true;
+	}
+}
 // ObjectClone
 function clone(obj){
     if(obj == null || typeof(obj) != 'object')
@@ -92,7 +107,7 @@ class ConsoleManager {
 				console.log.apply(this, this.queue[0]);
 				this.queue.shift();
 			}
-		}, interval ? interval : 100);
+		}, interval ? interval : 40);
 	}
 }
 const Console = new ConsoleManager();
@@ -238,21 +253,21 @@ class stackCompiler{
 	}
 	// Find files
 	findFiles(ext, dir, updater, extExclude){
-		if(DEBUG)
-			Console.log(Color.BgYellow + Color.TextBlack + dir + Color.Reset);
+		if(DEBUG) {
+			Console.log(Color.BgYellow + Color.TextBlack, ext, Color.Reset);
+			Console.log(Color.BgYellow + Color.TextBlack, Root + dir, Color.Reset);
+		}
 		let fileWalker = walk.walk(Root + dir, { followLinks: false }),
 			files = [];
-		if(DEBUG)
-			Console.log(Root + dir);
 		fileWalker.on('file', (root, stat, next) => {
 			let toPush = false,
 				name = (root + '/' + stat.name).replace(/\//, "\\");
-			if(DEBUG){
+			if(DEBUG && debugLevel == 2){
 				Console.log("");
-				Console.log(stat.name);
-				Console.log(name);
-				Console.log(Root + dir + "\\" + IgnoredDirs[0]);
-				Console.log(name.replace(/\\+/gi, "\\").indexOf((Root + dir + "\\" + IgnoredDirs[0]).replace(/\\+/gi, "\\")));
+				Console.log(Color.TextCyan, stat.name);
+				Console.log(Color.TextCyan, name);
+				Console.log(Color.TextCyan, Root + dir + "\\" + IgnoredDirs[0]);
+				Console.log(Color.TextCyan, name.replace(/\\+/gi, "\\").indexOf((Root + dir + "\\" + IgnoredDirs[0]).replace(/\\+/gi, "\\")));
 			}
 
 			// Because html code looks for .max.html this code has to be used instead of just checking path.extname() against the extentions
@@ -273,10 +288,14 @@ class stackCompiler{
 				// If we're still clear to push then try to exclude more!
 				if(toPush){
 					// TODO: Optimize indexOf?
-					if(name.replace(/\\+/gi, "\\").indexOf((Root + dir + "\\" + IgnoredDirs[0]).replace(/\\+/gi, "\\")) > -1){
-						// It's in an excluded directory!
-						toPush = false;
+					for(let ig of IgnoredDirs){
+						if(name.replace(/\\+/gi, "\\").indexOf((Root + dir + "\\" + ig).replace(/\\+/gi, "\\")) > -1){
+							// It's in an excluded directory!
+							toPush = false;
+							break;
+						}
 					}
+
 					// If we're still clear to push then try to exclude more!
 					if(toPush){
 						// Excluded extentions
@@ -300,11 +319,11 @@ class stackCompiler{
 	    });
 		fileWalker.on('end', () => {
 			if(DEBUG)
-				Console.log(Color.TextYellow, files, Color.Reset);
+				Console.warn(Color.TextYellow, files, Color.Reset);
 			// For ending after all files are compiled
 			this.fileFindersCompleted++;
 			this.totalFiles += files.length;
-			if(DEBUG)
+			if(DEBUG && debugLevel == 1)
 				Console.warn(this.totalFiles);
 			for(let file of files){
 				if(Verb == "watch") {
@@ -359,18 +378,6 @@ class stackCompiler{
 		this.checkFiles();
 	}
 }
-const flags = {
-	"ignore": (args) => {
-		Array.prototype.push.apply(IgnoredDirs, args);
-	},
-	"check": (args) => {
-		CheckNewFiles = 1000 * parseInt(args[0]);
-	},
-	"debug": (args) => {
-		DEBUG = true;
-	}
-}
-let sc;
 function aliveTimeout() {
 	// if check then check
 	if(CheckNewFiles != 0) {
@@ -417,6 +424,11 @@ function aliveTimeout() {
 		// If it's a straight compile, then don't check for new files ever
 		CheckNewFiles = 0;
 	}
+	if(DEBUG){
+		Console.log(Color.TextCyan, Params, Color.Reset);
+		if(IgnoredDirs.length > 0)
+			Console.log(Color.TextCyan + "Ignoring:", IgnoredDirs, Color.Reset);
+	}
 
 	// Nothing needs to be done, but I'm leaving in the if-else constructs anyway in case I need them in the future
 	if(DirParams.length == 1){
@@ -427,8 +439,10 @@ function aliveTimeout() {
 
 	} else {
 		Console.log(Color.BgRed + Color.TextBlack + "Error:" + Color.Reset + Color.TextRed + " Improper arguments" + Color.Reset);
-		Console.flush();
-		process.exit(1);
+		Console.flushSlow(() => {
+			process.exit(1);
+		});
+		return; // prevent any further method execution
 	}
 	sc = new stackCompiler();
 	// Timeout keeps the code running, and also checks for new files if enabled
