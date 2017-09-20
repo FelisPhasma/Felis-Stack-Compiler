@@ -8,7 +8,7 @@ class ChildProcess {
 		console.log(data.toString().replace(/\n/gi, ""));
 	}
 	onClose(code){
-		console.log("Felis-Stack exited with code ", code);
+		console.log("felis-stack exited with code ", code);
 		process.exit(code);
 	}
 	constructor(command){
@@ -24,7 +24,7 @@ class ChildProcess {
 }
 class Cli {
 	static _escapeArg(arg){
-	    return arg.replace(/\\/gi, "\\\\").replace(/"/gi, "\\\"");
+	    return arg.replace(/\//gi, "\\").replace(/\\/gi, "\\\\").replace(/\"/gi, "\\\"");
 	}
 
 	static help(){
@@ -33,15 +33,26 @@ class Cli {
 
     The verbs are:
 
-        help    Dispalys help
-        watch   Watches for changes and compiles. Arguments:
-					<Dir>
-					<SassDir> <BabelDir> <HtmlDir>
-					<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
-		compile Compiles, doesn't listen.
-					<Dir>
-					<SassDir> <BabelDir> <HtmlDir>
-					<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+        h, help       Dispalys help
+        w, watch      Watches for changes and compiles. Arguments:
+					       <Dir>
+					       <SassDir> <BabelDir> <HtmlDir>
+					       <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+		c, compile    Compiles, doesn't listen.
+					       <Dir>
+					       <SassDir> <BabelDir> <HtmlDir>
+					       <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+
+	The args are:
+
+		--debug
+				Prints debug information while code is running
+		--ignore [dir, dir, ...]
+				Ignores certian dirs
+		--check <n>
+				Checks for new files every n seconds.
+				0 = don't check
+				Default = 0
 
 	Extentions:
 		".max.htm" and ".max.html" files are compressed
@@ -53,15 +64,14 @@ class Cli {
 	    for(let i = 0, l = args.length; i < l; i++){
 	        args[i] = Cli._escapeArg(args[i]);
 	    }
-	    let command = `node \"${appPath}\\main.js\" watch "${path.resolve(".")}" "${args.join(`" "`)}"`;
+	    let command = `node \"${appPath}\\src\\main.js\" watch "${path.resolve(".")}" "${args.join(`" "`)}"`;
 		let child = new ChildProcess(command);
 	}
 	static compile(args){
 	    for(let i = 0, l = args.length; i < l; i++){
 	        args[i] = Cli._escapeArg(args[i]);
 	    }
-	    let command = `node \"${appPath}\\main.js\" compile "${path.resolve(".")}" "${args.join(`" "`)}"`;
-	    //console.log(command);
+	    let command = `node \"${appPath}\\src\\main.js\" compile "${path.resolve(".")}" "${args.join(`" "`)}"`;
 		let child = new ChildProcess(command);
 	}
 }
@@ -78,9 +88,10 @@ const verbs = {
 	if(process.argv.length < 3){
 	    verb = "h";
 	} else {
-	    verb = process.argv[2][0] == "-" ? process.argv[2].substr(1) : process.argv[2];
+	    verb = (process.argv[2][0] == "-" ? process.argv[2].substr(1) : process.argv[2]).toLowerCase();
 	}
 	if(verbs[verb] == undefined)
 		verb = "h";
-	verbs[verb.toLowerCase()](Array.prototype.slice.call(process.argv, 3));
+	verbs[verb](Array.prototype.slice.call(process.argv, 3));
 }();
+// TODO: Fix bug with help message display

@@ -27,19 +27,30 @@ Usage: felis-stack <verb> [<args>]
 
 The verbs are:
 
-	help    Dispalys help
-	watch   Watches for changes and compiles. Arguments:
-				<Dir>
-				<SassDir> <BabelDir> <HtmlDir>
-				<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
-	compile Compiles, doesn't listen.
-				<Dir>
-				<SassDir> <BabelDir> <HtmlDir>
-				<SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+	h, help       Dispalys help
+	w, watch      Watches for changes and compiles. Arguments:
+					   <Dir>
+					   <SassDir> <BabelDir> <HtmlDir>
+					   <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+	c, compile    Compiles, doesn't listen.
+					   <Dir>
+					   <SassDir> <BabelDir> <HtmlDir>
+					   <SassDir> <CssOutDir> <BabelDir> <JsOutDir> <HtmlDir>
+
+The args are:
+
+	--debug
+			Prints debug information while code is running
+	--ignore [dir, dir, ...]
+			Ignores certian dirs
+	--check <n>
+			Checks for new files every n seconds.
+			0 = don't check
+			Default = 0
 
 Extentions:
 	".max.htm" and ".max.html" files are compressed
-	".js" and ".ec6" files are compressed
+	".babl" files are compressed
 	".scss" files are compressed
 ```
 
