@@ -7,7 +7,6 @@ const Params = process.argv.slice(4);
 var chokidar = require('chokidar'),
     autoprefixer = require('autoprefixer'),
     postcss = require('postcss'),
-    crass = require('crass'),
     nodeSass = require('node-sass'),
     babel = require('babel-core'),
     htmlminify = require('html-minifier').minify,
@@ -164,17 +163,23 @@ class stackCompiler{
 			});
 		} else {
 			// procede normally
-			let css = nodeSass.renderSync({
-		        data: sass
-		    });
+			let css;
+			try {
+				css = nodeSass.renderSync({
+					data: sass,
+					outputStyle: "compressed"
+				});
+			} catch(err) {
+		        Console.log("\t" + Console.BgRed + Console.TextBlack + err);
+				callback();
+		        return;
+		    }
 		    // auto-prefix
 		    postcss([autoprefixer]).process(css.css.toString()).then((result) => {
 		        result.warnings().forEach((warn) => {
 		            Console.warn(warn.toString());
 		        });
-		        // minify
-		        let parsed = crass.parse(result.css),
-		            compressedCss = parsed.toString();
+				let compressedCss = result.css;
 		        // write
 				// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
 				let out = DirParams.length == 5 ? Root + "\\" + DirParams[1] + "\\" : path.dirname(file) + "\\";
