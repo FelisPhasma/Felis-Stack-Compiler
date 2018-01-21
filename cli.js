@@ -10,7 +10,7 @@ class ChildProcess {
 	}
 	onClose(code){
 		console.log("felis-stack exited with code ", code);
-		process.exit(code);
+		//process.exit(code);
 	}
 	constructor(command){
 		let child = exec(command, function(error, stdout, stderr){

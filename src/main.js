@@ -195,6 +195,7 @@ class stackCompiler{
 		}
 	}
 	jsUpdate(file, callback) {
+		let sourceMap = Verb == "compile" ? false : true;
 	    let code = fs.readFileSync(file, 'utf8');
 	    let compiled = NaN;
 	    try {
@@ -203,7 +204,7 @@ class stackCompiler{
 	            babelrc: false,
 	            minified: true,
 	            comments: false,
-	            sourceMaps: true, //"both",
+	            sourceMaps: sourceMap,
 	            filename: path.basename(file).split(".")[0] + ".js"
 	        });
 	    } catch(err) {
@@ -213,13 +214,15 @@ class stackCompiler{
 	    }
 		// If it's 5-args, then output to the out dir. Otherwise output to the same dir as the file
 		let out = DirParams.length == 5 ? Root + "\\" + DirParams[3] + "\\" : path.dirname(file) + "\\";
-	    fs.writeFile(out + path.basename(file).split(".")[0] + ".js.map", JSON.stringify(compiled.map), (err) => {
-	        if (err){
-				callback();
-				throw err;
-			}
-	    });
-	    fs.writeFile(out + path.basename(file).split(".")[0] + ".min.js", compiled.code + "\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map", (err) => {
+		if(sourceMap) {
+			fs.writeFile(out + path.basename(file).split(".")[0] + ".js.map", JSON.stringify(compiled.map), (err) => {
+				if (err){
+					callback();
+					throw err;
+				}
+			});
+		}
+	    fs.writeFile(out + path.basename(file).split(".")[0] + ".min.js", compiled.code + (sourceMap ? ("\n//# sourceMappingURL=" + path.basename(file).split(".")[0] + ".js.map") : ""), (err) => {
 			if (err){
 				callback();
 				throw err;
